@@ -4,6 +4,7 @@ import com.thejaswini.flightbooking.constant.ValidationMessages;
 import com.thejaswini.flightbooking.dto.FlightRequest;
 import com.thejaswini.flightbooking.dto.FlightResponse;
 import com.thejaswini.flightbooking.exception.DuplicateFlightException;
+import com.thejaswini.flightbooking.mapper.FlightMapper;
 import com.thejaswini.flightbooking.model.Flight;
 import com.thejaswini.flightbooking.repository.FlightRepository;
 import com.thejaswini.flightbooking.service.FlightService;
@@ -22,12 +23,15 @@ public class FlightServiceImpl implements FlightService {
     private static final Logger log = LoggerFactory.getLogger(FlightServiceImpl.class);
 
     private final FlightRepository flightRepository;
+    private final FlightMapper flightMapper;
 
     /**
      * @param flightRepository storage for flights (injected)
+     * @param flightMapper     domain-to-DTO mapper (injected)
      */
-    public FlightServiceImpl(FlightRepository flightRepository) {
+    public FlightServiceImpl(FlightRepository flightRepository, FlightMapper flightMapper) {
         this.flightRepository = flightRepository;
+        this.flightMapper = flightMapper;
     }
 
     /** {@inheritDoc} */
@@ -40,6 +44,6 @@ public class FlightServiceImpl implements FlightService {
         Flight saved = flightRepository.save(new Flight(
                 request.flightNumber(), request.origin(), request.destination(), request.totalSeats()));
         log.info("Registered flight {} with {} seats", saved.getFlightNumber(), saved.getTotalSeats());
-        return FlightResponse.from(saved);
+        return flightMapper.toResponse(saved);
     }
 }

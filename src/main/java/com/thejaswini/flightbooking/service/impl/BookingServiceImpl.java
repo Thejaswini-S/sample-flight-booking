@@ -5,6 +5,7 @@ import com.thejaswini.flightbooking.dto.BookingRequest;
 import com.thejaswini.flightbooking.dto.BookingResponse;
 import com.thejaswini.flightbooking.exception.FlightNotFoundException;
 import com.thejaswini.flightbooking.exception.InsufficientSeatsException;
+import com.thejaswini.flightbooking.mapper.BookingMapper;
 import com.thejaswini.flightbooking.model.Booking;
 import com.thejaswini.flightbooking.model.Flight;
 import com.thejaswini.flightbooking.repository.BookingRepository;
@@ -32,14 +33,18 @@ public class BookingServiceImpl implements BookingService {
 
     private final FlightRepository flightRepository;
     private final BookingRepository bookingRepository;
+    private final BookingMapper bookingMapper;
 
     /**
      * @param flightRepository  storage for flights (injected)
      * @param bookingRepository storage for bookings (injected)
+     * @param bookingMapper     domain-to-DTO mapper (injected)
      */
-    public BookingServiceImpl(FlightRepository flightRepository, BookingRepository bookingRepository) {
+    public BookingServiceImpl(FlightRepository flightRepository, BookingRepository bookingRepository,
+                              BookingMapper bookingMapper) {
         this.flightRepository = flightRepository;
         this.bookingRepository = bookingRepository;
+        this.bookingMapper = bookingMapper;
     }
 
     /** {@inheritDoc} */
@@ -62,6 +67,6 @@ public class BookingServiceImpl implements BookingService {
                 request.seats(), Instant.now()));
         log.info("Confirmed booking {} on {} for {} seat(s)",
                 booking.id(), booking.flightNumber(), booking.seats());
-        return BookingResponse.from(booking);
+        return bookingMapper.toResponse(booking);
     }
 }

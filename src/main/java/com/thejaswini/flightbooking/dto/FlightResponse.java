@@ -1,9 +1,10 @@
 package com.thejaswini.flightbooking.dto;
 
-import com.thejaswini.flightbooking.model.Flight;
-
 /**
  * API representation of a flight, including live seat availability.
+ *
+ * <p>Immutable value object constructed via its {@link Builder} (Builder pattern) — which the
+ * generated MapStruct mapper also uses. Kept as a record so equality/toString come for free.
  *
  * @param flightNumber   unique flight identifier
  * @param origin         departure location (informational)
@@ -19,13 +20,73 @@ public record FlightResponse(
         int availableSeats) {
 
     /**
-     * Maps a {@link Flight} domain object to its API representation.
-     *
-     * @param flight the domain flight (must not be {@code null})
-     * @return the response DTO
+     * @return a new fluent {@link Builder}
      */
-    public static FlightResponse from(Flight flight) {
-        return new FlightResponse(flight.getFlightNumber(), flight.getOrigin(),
-                flight.getDestination(), flight.getTotalSeats(), flight.getAvailableSeats());
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    /**
+     * Fluent builder for {@link FlightResponse} (also used by the generated MapStruct mapper).
+     */
+    public static final class Builder {
+
+        private String flightNumber;
+        private String origin;
+        private String destination;
+        private int totalSeats;
+        private int availableSeats;
+
+        /**
+         * @param flightNumber the unique flight number
+         * @return this builder
+         */
+        public Builder flightNumber(String flightNumber) {
+            this.flightNumber = flightNumber;
+            return this;
+        }
+
+        /**
+         * @param origin the departure location
+         * @return this builder
+         */
+        public Builder origin(String origin) {
+            this.origin = origin;
+            return this;
+        }
+
+        /**
+         * @param destination the arrival location
+         * @return this builder
+         */
+        public Builder destination(String destination) {
+            this.destination = destination;
+            return this;
+        }
+
+        /**
+         * @param totalSeats the total seating capacity
+         * @return this builder
+         */
+        public Builder totalSeats(int totalSeats) {
+            this.totalSeats = totalSeats;
+            return this;
+        }
+
+        /**
+         * @param availableSeats the seats still available to book
+         * @return this builder
+         */
+        public Builder availableSeats(int availableSeats) {
+            this.availableSeats = availableSeats;
+            return this;
+        }
+
+        /**
+         * @return the constructed immutable {@link FlightResponse}
+         */
+        public FlightResponse build() {
+            return new FlightResponse(flightNumber, origin, destination, totalSeats, availableSeats);
+        }
     }
 }
