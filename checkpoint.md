@@ -61,7 +61,10 @@ _Recorded as commits are made; each references its driving prompt in `user-input
 ---
 
 ## Blocking questions to user
-_None open._ (D1–D6 resolved; plan approved.)
+- **[RESOLVED 11:19] GitHub auth identity:** gh CLI active account is now **Thejaswini-S** (verified).
+  Commit author `Thejaswini <sthejaswini2001@gmail.com>`. Pushes and PRs attribute to Thejaswini-S.
+- **[RESOLVED 11:19] Branching model:** `master` integration branch + one-at-a-time `feature/*` PRs.
+  Foundation (docs/scaffold/config/domain) = `master` baseline. Proceeding.
 
 ## Notes / risks
 - Environment verified (2026-07-08 10:46): Java 17.0.19 LTS, Git 2.55, Node v24.15/npm 11.6, Gradle (scoop), Docker present.

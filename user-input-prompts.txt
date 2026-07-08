@@ -202,8 +202,6 @@ why no timing updated for the prompts?
 Added a local received-time to every prompt header and documented the timing
 methodology. Anchored reads: 10:46 (clock) and commits at 10:50 / 10:54 / 10:55 /
 11:02; #11 anchored at 11:03. Earliest prompts (#1–#6, #8–#10) marked "~" approximate.
-
-
 =======================================================================
  END OF AUDIT  —  appended chronologically as new prompts arrive.
 =======================================================================

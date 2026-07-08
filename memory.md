@@ -38,8 +38,18 @@ OpenAPI/Swagger, Postman+Newman, unit+integration tests, a Java zip utility, and
 - **Full Javadoc on every public AND private method.** Quality over quantity — every line meaningful, no filler.
 - **Config via profiles:** `application.yml` (common; default profile `dev`) + `application-dev.yml` (seeds sample flights, DEBUG) + `application-prod.yml` (no seed, quieter). Seed bound via `@ConfigurationProperties(prefix=flight-booking.seed)`.
 - **Keep audits current:** timestamp every prompt in `user-input-prompts.txt` and every commit in `time-tracker.md`.
-- Commits: **many small, meaningful, LOCAL commits** (do NOT push). Each commit message references the
-  driving prompt (see `user-input-prompts.txt`). Final commit = manual-improvement summary.
+- Commits: **many small, meaningful commits**, each referencing its driving prompt (see
+  `user-input-prompts.txt`). Delivered via `feature/*` branches → PRs into `master` (user approves each).
+  Final commit = manual-improvement summary.
+
+## Git / remote / branching
+- Remote `origin` = https://github.com/Thejaswini-S/sample-flight-booking (started empty).
+- Integration branch: **`master`** (renamed from `main`).
+- Auth: gh active account = **Thejaswini-S** (push + PRs). Commit author = `Thejaswini <sthejaswini2001@gmail.com>`.
+- Strategy: foundation (docs/scaffold/config/domain) = `master` baseline; each epic on a `feature/*`
+  branch → PR → user manually approves → merge. **One PR at a time** (gated on review).
+- Planned feature branches: `feature/booking-api`, `feature/observability`, `feature/testing`,
+  `feature/api-collection`, `feature/tooling`, `feature/docs`.
 
 ## Key files (planned)
 - Prompt audit: `user-input-prompts.txt` (verbatim, all prompts).
