@@ -21,6 +21,9 @@ public final class ErrorMessages {
     /** Request body could not be parsed. */
     public static final String MALFORMED_REQUEST = "Malformed or unreadable request body";
 
+    /** Requested path / static resource was not found. */
+    public static final String RESOURCE_NOT_FOUND = "Requested resource was not found";
+
     /** Catch-all for unexpected server errors. */
     public static final String INTERNAL_ERROR = "An unexpected error occurred";
 

@@ -20,6 +20,9 @@ public enum ErrorCode {
     /** Referenced flight does not exist. */
     FLIGHT_NOT_FOUND("FB-404-001", HttpStatus.NOT_FOUND),
 
+    /** Requested path / static resource does not exist. */
+    RESOURCE_NOT_FOUND("FB-404-002", HttpStatus.NOT_FOUND),
+
     /** Not enough seats available to fulfil the booking. */
     INSUFFICIENT_SEATS("FB-409-001", HttpStatus.CONFLICT),
 

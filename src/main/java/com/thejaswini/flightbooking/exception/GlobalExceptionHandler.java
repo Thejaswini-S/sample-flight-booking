@@ -10,6 +10,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.Instant;
 import java.util.stream.Collectors;
@@ -69,6 +70,20 @@ public class GlobalExceptionHandler {
                                                           HttpServletRequest req) {
         log.warn("Malformed request body at {}: {}", req.getRequestURI(), ex.getMostSpecificCause().getMessage());
         return build(ErrorCode.MALFORMED_REQUEST, ErrorMessages.MALFORMED_REQUEST, req);
+    }
+
+    /**
+     * Handles requests to unmapped paths / missing static resources (e.g. {@code /favicon.ico}).
+     * These are ordinary 404s, not server errors, so they are logged at debug level only.
+     *
+     * @param ex  the missing-resource exception
+     * @param req current request (used for the path)
+     * @return a 404 response
+     */
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNoResource(NoResourceFoundException ex, HttpServletRequest req) {
+        log.debug("No resource for {}", req.getRequestURI());
+        return build(ErrorCode.RESOURCE_NOT_FOUND, ErrorMessages.RESOURCE_NOT_FOUND, req);
     }
 
     /**
