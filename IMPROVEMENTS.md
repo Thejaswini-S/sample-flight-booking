@@ -24,6 +24,9 @@
   seat state in a shared store (Redis/DB) with an atomic decrement or optimistic locking. No persistence —
   data is lost on restart.
 - **No booking retrieval or cancellation** (out of the stated scope) — bookings are stored but not readable.
+- **No idempotency on `POST /bookings`.** A client that retries after a timeout (its first call having
+  actually succeeded) would create a second booking and consume seats twice. An `Idempotency-Key` header,
+  deduplicated server-side to return the original result, is the classic booking-API safeguard for this.
 - **Logbook logs request/response bodies** — handy for a demo, but would leak PII in production; it should
   be filtered/obfuscated or disabled there.
 - **No auth / rate limiting** (per the brief) — not production-safe as-is.
