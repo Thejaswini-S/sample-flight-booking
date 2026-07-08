@@ -1,0 +1,12 @@
+# Normalize line endings for consistent cross-platform checkouts
+* text=auto eol=lf
+
+# Windows scripts must keep CRLF
+*.bat   text eol=crlf
+*.cmd   text eol=crlf
+
+# Gradle wrapper shell script must stay LF so it runs on *nix
+gradlew text eol=lf
+
+# Binary artifacts
+*.jar   binary
