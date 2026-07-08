@@ -1,0 +1,9 @@
+# Exclude heavy / generated / VCS content from the Docker build context
+build/
+.gradle/
+logs/
+dist/
+.git/
+.idea/
+*.iml
+bin/
