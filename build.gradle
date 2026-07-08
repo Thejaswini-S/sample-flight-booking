@@ -54,3 +54,13 @@ tasks.named('jacocoTestReport') {
         html.required = true
     }
 }
+
+// Runs the standalone ProjectArchiver to zip sources/docs/README into dist/ (excludes build/logs/git).
+tasks.register('runArchiver', JavaExec) {
+    group = 'distribution'
+    description = 'Zips the project sources/docs/README into dist/, excluding build/logs/git.'
+    dependsOn tasks.named('classes')
+    workingDir = rootDir
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.thejaswini.flightbooking.util.ProjectArchiver'
+}
