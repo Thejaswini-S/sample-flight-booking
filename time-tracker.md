@@ -11,8 +11,9 @@
 | # | Clock (local) | Δ prev (min) | Total (min) | Commit — what was developed |
 |---|---------------|-------------:|------------:|------------------------------|
 | start | 10:45:00 | 0 | 0 | Kickoff — plan approved, environment verified (Java 17, Gradle, Docker, Node) |
+| 1 | 10:50:41 | 6 | 6 | `629913d` docs: plan, prompt audit, handover notes, time tracker, .gitignore |
 
 ## Running summary
-- **Commits so far:** 0
-- **Total elapsed:** ~1 min (as of 10:46)
-- **Notes:** table is appended after each commit using the real git timestamp.
+- **Commits so far:** 1
+- **Total elapsed:** ~6 min (as of 10:50)
+- **Notes:** each commit's row is recorded here and committed with the next change.

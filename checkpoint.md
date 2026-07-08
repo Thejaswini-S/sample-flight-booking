@@ -14,7 +14,8 @@
 | Phase | Description | Status |
 |-------|-------------|--------|
 | 0 | Plan authored + approved | ✅ Done |
-| 1 | Prompt audit + handover docs; verify env; git init + `.gitignore` | 🔄 In progress |
+| 1 | Prompt audit + handover docs; verify env; git init + `.gitignore` | ✅ Done |
+| 1b | Scaffold Gradle + Spring Boot (Java 17, port 8081); build verified | ✅ Done |
 | 2 | Domain model + in-memory repositories | ⬜ Pending |
 | 3 | Services + overbooking logic | ⬜ Pending |
 | 4 | DTOs + validation + exceptions + error codes + global handler | ⬜ Pending |
@@ -35,7 +36,8 @@ _Recorded as commits are made; each references its driving prompt in `user-input
 
 | # | Commit subject | Driving prompt |
 |---|----------------|----------------|
-| — | (pending first commit) | — |
+| 1 | docs: plan, prompt audit, handover notes, time tracker, .gitignore | #1–#6 |
+| 2 | build: scaffold Gradle + Spring Boot (Java 17, port 8081) | #3, #5 |
 
 ---
 
