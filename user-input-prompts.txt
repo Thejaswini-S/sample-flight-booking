@@ -1,0 +1,141 @@
+=======================================================================
+ FLIGHT TICKET BOOKING API  —  USER INPUT PROMPT AUDIT
+=======================================================================
+ Project      : Flight Ticket Booking REST API (take-home interview task)
+ Candidate    : Thejaswini            (GitHub: Thejaswini-S)
+ AI Assistant : GitHub Copilot
+ AI Model     : Claude Opus 4.8
+ Build/Stack  : Java + Spring Boot 3.x + Gradle  (port 8081)
+ Purpose      : Complete, verbatim, ordered audit of EVERY prompt the
+                user (candidate) provided to the AI agent, for full
+                transparency and interviewer review.
+ Integrity    : Prompts are reproduced EXACTLY as given — including the
+                original spelling/typos — so the audit is faithful and
+                un-edited. Do not "correct" them.
+ Convention   : Each entry = one user message ("iteration"). The same
+                text is also referenced in the corresponding git commit
+                message(s) that the prompt drove.
+=======================================================================
+
+
+-----------------------------------------------------------------------
+ PROMPT #1   |   2026-07-08   |   Phase: Feasibility / kickoff
+-----------------------------------------------------------------------
+[ATTACHED CONTEXT] question.txt.txt — the take-home task brief:
+  "Take-home task: Flight Ticket Booking API (Spring Boot + Java).
+   Design and implement a small REST API for a flight ticket booking
+   system ... in-memory storage only, do not allow overbooking, only
+   booking APIs (no retrieval), appropriate HTTP methods/status codes,
+   README with run steps + example requests + future improvements.
+   Every AI prompt must be committed (prompt in commit message), then a
+   final manual-improvement commit." (full brief preserved in README/plan.md)
+
+[USER PROMPT — VERBATIM]
+do you think you can work on this? I want to make sure i clear this interview.
+
+[AI ACTION]
+Confirmed feasibility; explained it would build a compliant Spring Boot
+booking API, set up git with prompt-documented commits, and write the README.
+
+
+-----------------------------------------------------------------------
+ PROMPT #2   |   2026-07-08   |   Phase: Senior-level requirements
+-----------------------------------------------------------------------
+[USER PROMPT — VERBATIM]
+you will have to document everything from the start to end. 
+
+make sure all the prompts I gave you are saved as audit for sharing to the interviewer. 
+
+centerlisied logging folder with rolling logs and TTL of 7 days
+
+also have a small java utilty file that will zip the quireed java files docs readme and ignoring unncessary files. 
+
+git username: Thejaswini-S
+
+I need a senior level java development, having followed Java principle, including SOLID patterns, null checks, handling exceptions and custom exception handler and custom error code and status code and handle pagnation if needed for database get queries. 
+
+ingesting logs to aws and indecing it can be later part, better scope for future but in this 1 hour I am focusing on the main requirements of the project. speak out and question back immedaitely when you cannot decide the best flow from the instructiions I gave you or any ambigious sutiation then stop execution and log it in checkpoint.md and then say me the query 
+
+maintain proper memory.md and checkpoint.md and plan.md files memory- is your local context file. checkpoint.md is the progress checkin and plan.md is the door to exit complete structure of what you gonna do. 
+
+these files are required for handover to new agent from scracth if you failed, 
+use java advance features, but dont force somethign which is not needed. be efficient.
+
+[AI ACTION]
+Captured requirements: full documentation, prompt audit, centralized rolling
+logs (7-day TTL), Java zip utility, SOLID + null-checks + custom exceptions +
+error/status codes + pagination-if-needed, AWS log shipping = future scope,
+handover docs (memory/checkpoint/plan), efficient use of advanced Java.
+
+
+-----------------------------------------------------------------------
+ PROMPT #3   |   2026-07-08   |   Phase: Tooling, testing, DoD
+-----------------------------------------------------------------------
+[USER PROMPT — VERBATIM]
+use gradle as it is faster and better cachable.
+have open api specs and proper swagger endpoints and postman collections to import. 
+unit testing and couple of intergration testing
+and example requests
+
+the final definition of DONE: all unit tests and intergration passes, the required logic is implemented and all required lines are covered in testing. 
+
+and postman collections endpoints are created and newman is running successfully.
+
+expose on port 8081.
+
+mention which model is used for developing project and store all prompt in a nice way to the document. 
+
+u can do git config for this project with Name Thejaswini and git username Thejaswini-S and mail sthejaswini2001@gmail.com 
+
+any questions before starting do let me know now. I assume you gonna work autonosmoly autopiloting on this to provide the best solution, but proactively ask me any questions during the devlopment when you are stuck instead of taking any your own decision, please make a note, decision is mine and you are an agent to develop on the roadmap I set for.
+
+[AI ACTION]
+Locked in: Gradle; OpenAPI/Swagger; Postman + Newman; unit + integration tests;
+DoD = all tests pass + logic implemented + required lines covered + Newman passes;
+port 8081; model attribution; git identity (Thejaswini / Thejaswini-S /
+sthejaswini2001@gmail.com). Prepared clarifying questions (D1–D5).
+
+
+-----------------------------------------------------------------------
+ PROMPT #4   |   2026-07-08   |   Phase: Plan gate
+-----------------------------------------------------------------------
+[USER PROMPT — VERBATIM]
+create plan.md file and I am gonna review it. and then I approve your plan then you can start implementing. it
+
+[AI ACTION]
+Authored plan.md (architecture, API design, overbooking strategy, testing,
+logging, roadmap, decisions D1–D5) and paused for approval.
+
+
+-----------------------------------------------------------------------
+ PROMPT #5   |   2026-07-08   |   Phase: Approval + commit policy + Docker
+-----------------------------------------------------------------------
+[USER PROMPT — VERBATIM]
+mke sure u locally commit the changes one by one as meanigul commit as a progrssive development dont push all at once, bcz I am going to reiview the every commit u do. 
+
+and the importnat part what imporvement can be done on the application wise and infra wise. 
+
+and also have a small docker file for this algonwith D5 add D6. 
+
+and yeah the plan looks good.. u can get started.
+
+[AI ACTION]
+Plan approved (D1–D5 accepted as recommended). Added D6 = small Dockerfile.
+Policy: many small, meaningful LOCAL commits (no push) for step-by-step review;
+README to document improvements split into application-wise and infra-wise.
+
+
+-----------------------------------------------------------------------
+ PROMPT #6   |   2026-07-08   |   Phase: Prompt-audit file
+-----------------------------------------------------------------------
+[USER PROMPT — VERBATIM]
+you haven't stored the prompts I gave you so far. in user-input-prompts.txt in audit format
+
+[AI ACTION]
+Created this file (user-input-prompts.txt) capturing all prompts #1–#6 verbatim
+in audit format; wired it into the git/commit-message workflow.
+
+
+=======================================================================
+ END OF AUDIT  —  appended chronologically as new prompts arrive.
+=======================================================================
