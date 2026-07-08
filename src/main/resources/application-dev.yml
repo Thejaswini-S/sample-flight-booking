@@ -1,0 +1,28 @@
+# =====================================================================
+# DEV profile  (default for local development)
+#   - Verbose application logging
+#   - Seeds sample flights into the in-memory store so the API is usable
+#     immediately. Flight AI-101 intentionally has very few seats to make
+#     the overbooking guard easy to demonstrate.
+# =====================================================================
+
+logging:
+  level:
+    com.thejaswini.flightbooking: DEBUG
+
+flight-booking:
+  seed:
+    enabled: true
+    flights:
+      - flight-number: "AI-101"
+        origin: "BLR"
+        destination: "DXB"
+        total-seats: 3
+      - flight-number: "AI-202"
+        origin: "DEL"
+        destination: "SIN"
+        total-seats: 60
+      - flight-number: "AI-303"
+        origin: "BOM"
+        destination: "LHR"
+        total-seats: 10

@@ -4,6 +4,9 @@ server:
 spring:
   application:
     name: flight-booking-api
+  profiles:
+    # Default profile for local runs; override via SPRING_PROFILES_ACTIVE or --spring.profiles.active
+    active: dev
 
 # OpenAPI / Swagger UI (springdoc)
 springdoc:
@@ -17,3 +20,10 @@ springdoc:
 logging:
   file:
     path: logs
+
+# Application configuration bound via @ConfigurationProperties (see FlightSeedProperties).
+# Seed data is environment-specific and overridden per profile (dev enables sample flights).
+flight-booking:
+  seed:
+    enabled: false
+    flights: []

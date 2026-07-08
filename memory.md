@@ -34,6 +34,10 @@ OpenAPI/Swagger, Postman+Newman, unit+integration tests, a Java zip utility, and
 - No entity leakage; DTO mapping in service/controller.
 - Custom error codes `FB-<HTTP>-<NNN>` returned in a uniform `ErrorResponse`.
 - Overbooking prevented by an atomic `synchronized` check-and-decrement on the `Flight` aggregate.
+- **No inline/class-level literals** — use the `constant/` package (`ApiPaths`, `ValidationMessages`, `ConfigKeys`) or profile YAML.
+- **Full Javadoc on every public AND private method.** Quality over quantity — every line meaningful, no filler.
+- **Config via profiles:** `application.yml` (common; default profile `dev`) + `application-dev.yml` (seeds sample flights, DEBUG) + `application-prod.yml` (no seed, quieter). Seed bound via `@ConfigurationProperties(prefix=flight-booking.seed)`.
+- **Keep audits current:** timestamp every prompt in `user-input-prompts.txt` and every commit in `time-tracker.md`.
 - Commits: **many small, meaningful, LOCAL commits** (do NOT push). Each commit message references the
   driving prompt (see `user-input-prompts.txt`). Final commit = manual-improvement summary.
 

@@ -16,7 +16,8 @@
 | 0 | Plan authored + approved | ✅ Done |
 | 1 | Prompt audit + handover docs; verify env; git init + `.gitignore` | ✅ Done |
 | 1b | Scaffold Gradle + Spring Boot (Java 17, port 8081); build verified | ✅ Done |
-| 2 | Domain model + in-memory repositories | ⬜ Pending |
+| 2 | Domain model + in-memory repositories | ✅ Done |
+| 2c | Env profiles (dev/prod) + centralized constants package | ✅ Done |
 | 3 | Services + overbooking logic | ⬜ Pending |
 | 4 | DTOs + validation + exceptions + error codes + global handler | ⬜ Pending |
 | 5 | Controllers | ⬜ Pending |
@@ -38,6 +39,9 @@ _Recorded as commits are made; each references its driving prompt in `user-input
 |---|----------------|----------------|
 | 1 | docs: plan, prompt audit, handover notes, time tracker, .gitignore | #1–#6 |
 | 2 | build: scaffold Gradle + Spring Boot (Java 17, port 8081) | #3, #5 |
+| 3 | chore: normalize line endings (.gitattributes) | #5 |
+| 4 | docs: update prompt audit (#7–#10) | #10 |
+| 5 | docs: add per-prompt received-times to audit | #11 |
 
 ---
 

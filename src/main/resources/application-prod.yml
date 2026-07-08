@@ -1,0 +1,16 @@
+# =====================================================================
+# PROD profile  (production-like defaults)
+#   - Quieter logging (WARN root, INFO for application packages)
+#   - No seed data: a production instance starts empty and real flights
+#     are registered through the API.
+# =====================================================================
+
+logging:
+  level:
+    root: WARN
+    com.thejaswini.flightbooking: INFO
+
+flight-booking:
+  seed:
+    enabled: false
+    flights: []
