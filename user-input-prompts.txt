@@ -280,6 +280,31 @@ branches) to move faster: observability (rolling logs 7-day + Logbook + Actuator
 health/info), then tests, Postman/Newman, zip utility, Dockerfile, README.
 
 
+-----------------------------------------------------------------------
+ PROMPT #18  |   2026-07-08 ~12:52   |   Phase: Test documentation
+-----------------------------------------------------------------------
+[USER PROMPT — VERBATIM]
+description and expalantion for the test cases? i see unit tests are just created for no reason.
+
+[AI ACTION]
+Added a @DisplayName and a purpose comment to every test (what it proves and why),
+across the domain, service, and integration test classes. Re-ran: all green.
+
+
+-----------------------------------------------------------------------
+ PROMPT #19  |   2026-07-08 ~13:00   |   Phase: README deliverable
+-----------------------------------------------------------------------
+[USER PROMPT — VERBATIM]
+is short readme md file checked in?
+(+ restated deliverables: GitHub link, runnable Spring Boot project, short README with
+ how to run / example requests / what you would improve if you had more time)
+
+[AI ACTION]
+Confirmed it was not yet checked in; authored README.md (run steps, example requests,
+Swagger/actuator, tests, Docker, zip utility, and application-wise + infra-wise
+improvements). Added Postman collection + Newman (verified), zip utility, and Dockerfile.
+
+
 =======================================================================
  END OF AUDIT  —  appended chronologically as new prompts arrive.
 =======================================================================
