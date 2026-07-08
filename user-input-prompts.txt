@@ -15,11 +15,15 @@
  Convention   : Each entry = one user message ("iteration"). The same
                 text is also referenced in the corresponding git commit
                 message(s) that the prompt drove.
+ Timing       : Each header shows the local time the prompt was received.
+                Times marked "~" are approximate (reconstructed from real
+                git-commit anchors; per-message clocks were not captured for
+                the earliest prompts). #7 and #11 use anchored clock reads.
 =======================================================================
 
 
 -----------------------------------------------------------------------
- PROMPT #1   |   2026-07-08   |   Phase: Feasibility / kickoff
+ PROMPT #1   |   2026-07-08 ~10:43   |   Phase: Feasibility / kickoff
 -----------------------------------------------------------------------
 [ATTACHED CONTEXT] question.txt.txt — the take-home task brief:
   "Take-home task: Flight Ticket Booking API (Spring Boot + Java).
@@ -39,7 +43,7 @@ booking API, set up git with prompt-documented commits, and write the README.
 
 
 -----------------------------------------------------------------------
- PROMPT #2   |   2026-07-08   |   Phase: Senior-level requirements
+ PROMPT #2   |   2026-07-08 ~10:44   |   Phase: Senior-level requirements
 -----------------------------------------------------------------------
 [USER PROMPT — VERBATIM]
 you will have to document everything from the start to end. 
@@ -69,7 +73,7 @@ handover docs (memory/checkpoint/plan), efficient use of advanced Java.
 
 
 -----------------------------------------------------------------------
- PROMPT #3   |   2026-07-08   |   Phase: Tooling, testing, DoD
+ PROMPT #3   |   2026-07-08 ~10:44   |   Phase: Tooling, testing, DoD
 -----------------------------------------------------------------------
 [USER PROMPT — VERBATIM]
 use gradle as it is faster and better cachable.
@@ -97,7 +101,7 @@ sthejaswini2001@gmail.com). Prepared clarifying questions (D1–D5).
 
 
 -----------------------------------------------------------------------
- PROMPT #4   |   2026-07-08   |   Phase: Plan gate
+ PROMPT #4   |   2026-07-08 ~10:45   |   Phase: Plan gate
 -----------------------------------------------------------------------
 [USER PROMPT — VERBATIM]
 create plan.md file and I am gonna review it. and then I approve your plan then you can start implementing. it
@@ -108,7 +112,7 @@ logging, roadmap, decisions D1–D5) and paused for approval.
 
 
 -----------------------------------------------------------------------
- PROMPT #5   |   2026-07-08   |   Phase: Approval + commit policy + Docker
+ PROMPT #5   |   2026-07-08 ~10:45   |   Phase: Approval + commit policy + Docker
 -----------------------------------------------------------------------
 [USER PROMPT — VERBATIM]
 make sure u locally commit the changes one by one as meaningful commit as a progrssive development dont push all at once, bcz I am going to reiview the every commit u do. 
@@ -126,7 +130,7 @@ README to document improvements split into application-wise and infra-wise.
 
 
 -----------------------------------------------------------------------
- PROMPT #6   |   2026-07-08   |   Phase: Prompt-audit file
+ PROMPT #6   |   2026-07-08 ~10:46   |   Phase: Prompt-audit file
 -----------------------------------------------------------------------
 [USER PROMPT — VERBATIM]
 you haven't stored the prompts I gave you so far. in user-input-prompts.txt in audit format
@@ -137,7 +141,7 @@ in audit format; wired it into the git/commit-message workflow.
 
 
 -----------------------------------------------------------------------
- PROMPT #7   |   2026-07-08   |   Phase: Time tracking
+ PROMPT #7   |   2026-07-08 10:46   |   Phase: Time tracking
 -----------------------------------------------------------------------
 [USER PROMPT — VERBATIM]
 I need a time tracker when the project is started I think around 10:45AM and git log timer for every commit what is the time and short messge about it what is being developed in that time frame and a tracker on it sowing how much mins consumed.
@@ -149,7 +153,7 @@ was developed. Backed by real git commit timestamps.
 
 
 -----------------------------------------------------------------------
- PROMPT #8   |   2026-07-08   |   Phase: Quality bar
+ PROMPT #8   |   2026-07-08 ~10:47   |   Phase: Quality bar
 -----------------------------------------------------------------------
 [USER PROMPT — VERBATIM]
 keep in mind quality is more important than quantity. I dont perfer showing 1000 lines code and later fixing them on the production code, so make sure every line you propose to me for review, is meangiful and needed
@@ -160,7 +164,7 @@ production-minded code only — no filler, no speculative abstractions, no dead 
 
 
 -----------------------------------------------------------------------
- PROMPT #9   |   2026-07-08   |   Phase: Profiles, constants, Javadoc
+ PROMPT #9   |   2026-07-08 ~10:58   |   Phase: Profiles, constants, Javadoc
 -----------------------------------------------------------------------
 [USER PROMPT — VERBATIM]
 can we have application-dev and application-prod yaml as well, I may not use it now but I would need to scaffold the strucutre for future development as a senior engineer. 
@@ -177,7 +181,7 @@ public AND private method.
 
 
 -----------------------------------------------------------------------
- PROMPT #10  |   2026-07-08   |   Phase: Audit upkeep
+ PROMPT #10  |   2026-07-08 ~11:01   |   Phase: Audit upkeep
 -----------------------------------------------------------------------
 [USER PROMPT — VERBATIM]
 I think the user input prompts not updated.
@@ -185,6 +189,20 @@ I think the user input prompts not updated.
 [AI ACTION]
 Appended prompts #7–#10 to this audit file and committed to keeping it current
 after every user message.
+
+
+-----------------------------------------------------------------------
+ PROMPT #11  |   2026-07-08 11:03   |   Phase: Prompt timing
+-----------------------------------------------------------------------
+[USER PROMPT — VERBATIM]
+why no timing updated for the prompts?
+   [active selection context: "PROMPT #7 | 2026-07-08 | Phase: Time tracking"]
+
+[AI ACTION]
+Added a local received-time to every prompt header and documented the timing
+methodology. Anchored reads: 10:46 (clock) and commits at 10:50 / 10:54 / 10:55 /
+11:02; #11 anchored at 11:03. Earliest prompts (#1–#6, #8–#10) marked "~" approximate.
+
 
 =======================================================================
  END OF AUDIT  —  appended chronologically as new prompts arrive.
