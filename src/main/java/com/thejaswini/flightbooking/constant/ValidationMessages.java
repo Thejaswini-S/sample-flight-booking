@@ -41,6 +41,9 @@ public final class ValidationMessages {
     /** Request field {@code totalSeats} must be at least one. */
     public static final String REQ_TOTAL_SEATS_MIN = "totalSeats must be at least 1";
 
+    /** Generic request body must be provided (service-level null guard). */
+    public static final String REQUEST_REQUIRED = "request must not be null";
+
     /**
      * Prevents instantiation of this constants holder.
      */
