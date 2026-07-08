@@ -6,6 +6,9 @@
 # --- Logs (centralized, rolling; created at runtime) ---
 /logs/
 
+# --- devctl runtime state (server PID file, etc.) ---
+/.devctl/
+
 # --- Zip-utility output ---
 /dist/
 
