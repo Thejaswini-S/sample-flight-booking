@@ -455,8 +455,7 @@ do u think we can convert this to devctl ps1 and devctl sh? which can do all dev
 I prefer both long and short hands code for the devctl args please
 
 [AI ACTION]
-Replaced the two start-server scripts with a single developer-control tool in both
-flavors — devctl.ps1 (Windows/PowerShell) and devctl.sh (macOS/Linux) — each command
+A single developer-control tool in both flavors — devctl.ps1 (Windows/PowerShell) and devctl.sh (macOS/Linux) — each command
 exposing a long + short alias, and options with long/short forms. Commands: start|up,
 stop|down, restart|re, status|st, build|b, test|t, zip|z, docker-build|db,
 docker-run|dr, docker-stop|dx, docker-logs|dl, logs|l (-n/--lines, -s/--since
