@@ -22,6 +22,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -101,5 +102,20 @@ class BookingServiceImplTest {
     @DisplayName("rejects a null request (defensive null-check)")
     void rejectsNullRequest() {
         assertThatThrownBy(() -> service.book(null)).isInstanceOf(NullPointerException.class);
+    }
+
+    /** If persistence fails after a successful reserve, the seats are released and the error propagates. */
+    @Test
+    @DisplayName("releases seats and propagates when persistence fails after reserve")
+    void releasesSeatsWhenPersistenceFails() {
+        Flight flight = new Flight("AI-1", "BLR", "DXB", 10);
+        RuntimeException boom = new RuntimeException("storage down");
+        when(flightRepository.findByFlightNumber("AI-1")).thenReturn(Optional.of(flight));
+        doThrow(boom).when(bookingRepository).save(any(Booking.class));
+
+        assertThatThrownBy(() -> service.book(
+                BookingRequest.builder().flightNumber("AI-1").passengerName("X").seats(3).build()))
+                .isSameAs(boom);
+        assertThat(flight.getAvailableSeats()).isEqualTo(10);
     }
 }

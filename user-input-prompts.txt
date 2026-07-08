@@ -355,6 +355,33 @@ Flight.release() on save failure, ArgumentCaptor + new API tests (409/400/create
 ProjectArchiver absolute-path fix + ProjectArchiverTest, README fence + JaCoCo note. Tests green.
 
 
+-----------------------------------------------------------------------
+ PROMPT #21  |   2026-07-08 ~13:22   |   Phase: Code review (round 3)
+-----------------------------------------------------------------------
+[USER PROMPT — VERBATIM]
+2nd review:
+
+- the rollback path is still untested. BookingServiceImpl (line 67) now restores seats if
+  bookingRepository.save() throws, but BookingServiceImplTest (line 47) never forces that failure
+  path. add a test that mocks save() to throw, then asserts the seats return to the original count
+  and the exception propagates.
+
+- release() silently clamps over-release. Flight.java (line 68) uses Math.min(totalSeats,
+  availableSeats + seats). that's safe against exceeding capacity but it can hide double-release
+  bugs. i'd either make it package-private/service-internal, or throw if seats > totalSeats -
+  availableSeats.
+
+- nit: README profile wording is slightly ambiguous. README (line 34) says dev (default), while
+  application.yml (line 7) correctly says the packaged jar/Docker runs profile-less and build.gradle
+  (line 74) makes only bootRun default to dev. i'd say "dev default for bootRun" to avoid confusion.
+
+[AI ACTION]
+Agreed with all three (on branch fix/review-round-2 / PR #6): added a BookingServiceImplTest that
+makes save() throw and asserts seats are restored and the exception propagates; made Flight.release()
+fail-fast (throws IllegalStateException if releasing more than is reserved) instead of clamping, with
+two new FlightTest cases; clarified README so `dev` is described as the bootRun default only. Tests green.
+
+
 =======================================================================
  END OF AUDIT  —  appended chronologically as new prompts arrive.
 =======================================================================

@@ -18,8 +18,9 @@ Spring Boot + Java 17 (Gradle), single instance, no database, no auth — per th
 # from the project root  (Windows: .\gradlew.bat bootRun)
 ./gradlew bootRun
 ```
-Starts on **http://localhost:8081** with the `dev` profile, which seeds sample flights
-(`AI-101` = 3 seats, `AI-202` = 60, `AI-303` = 10) so you can book immediately.
+Starts on **http://localhost:8081**. `bootRun` activates the `dev` profile, which seeds sample
+flights (`AI-101` = 3 seats, `AI-202` = 60, `AI-303` = 10) so you can book immediately. (The
+packaged jar / Docker image runs profile-less by default — see Profiles below.)
 
 - Swagger UI: http://localhost:8081/swagger-ui.html
 - OpenAPI JSON: http://localhost:8081/v3/api-docs
@@ -32,8 +33,10 @@ docker run -p 8081:8081 flight-booking
 ```
 
 ### Profiles
-- `dev` (default) — seeds sample flights, verbose logging.
+- `dev` — the **`bootRun` default** (local runs only): seeds sample flights, verbose logging.
 - `prod` — no seed data, quieter logging: `./gradlew bootRun --args='--spring.profiles.active=prod'`.
+- **No profile** — the packaged `jar` / Docker default: no seed data, INFO logging. Set
+  `SPRING_PROFILES_ACTIVE` (or `--spring.profiles.active`) to choose a profile.
 
 ## API
 Base path `/api/v1`.

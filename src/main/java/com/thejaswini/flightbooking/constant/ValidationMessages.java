@@ -16,6 +16,8 @@ public final class ValidationMessages {
     public static final String TOTAL_SEATS_POSITIVE = "totalSeats must be positive";
     /** Number of seats to reserve must be greater than zero. */
     public static final String RESERVE_SEATS_POSITIVE = "seats to reserve must be positive";
+    /** Attempt to release more seats than are currently reserved (indicates a double-release bug). */
+    public static final String RELEASE_EXCEEDS_RESERVED = "cannot release more seats than are reserved";
     /** Flight instance passed to persistence must be provided. */
     public static final String FLIGHT_REQUIRED = "flight must not be null";
 

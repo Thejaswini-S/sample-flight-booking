@@ -89,4 +89,23 @@ class FlightTest {
         assertThat(success.get()).isEqualTo(capacity);
         assertThat(flight.getAvailableSeats()).isZero();
     }
+
+    /** Compensating action: release() returns previously reserved seats back to availability. */
+    @Test
+    @DisplayName("release() restores previously reserved seats")
+    void releaseRestoresSeats() {
+        Flight flight = new Flight("AI-1", "BLR", "DXB", 10);
+        flight.reserve(4);
+        flight.release(3);
+        assertThat(flight.getAvailableSeats()).isEqualTo(9);
+    }
+
+    /** Fail-fast: release() rejects returning more seats than are currently reserved (bug guard). */
+    @Test
+    @DisplayName("release() rejects releasing more than is reserved")
+    void releaseRejectsOverRelease() {
+        Flight flight = new Flight("AI-1", "BLR", "DXB", 10);
+        flight.reserve(2);
+        assertThatThrownBy(() -> flight.release(3)).isInstanceOf(IllegalStateException.class);
+    }
 }
