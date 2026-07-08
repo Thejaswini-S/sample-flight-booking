@@ -64,3 +64,9 @@ tasks.register('runArchiver', JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     mainClass = 'com.thejaswini.flightbooking.util.ProjectArchiver'
 }
+
+// Spring Boot's bootJar is the runnable artifact; disable the extra plain jar so the Docker
+// build copies exactly one jar from build/libs.
+tasks.named('jar') {
+    enabled = false
+}
