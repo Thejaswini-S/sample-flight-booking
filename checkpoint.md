@@ -5,7 +5,7 @@
 > the question here before asking.
 
 - **Last updated:** 2026-07-08
-- **Overall status:** 🟢 Implementation started (plan approved)
+- **Overall status:** 🟢 `feature/booking-api` complete & verified end-to-end — opening **PR #1** into `master`
 
 ---
 

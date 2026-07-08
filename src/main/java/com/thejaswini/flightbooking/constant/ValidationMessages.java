@@ -41,6 +41,23 @@ public final class ValidationMessages {
     /** Request field {@code totalSeats} must be at least one. */
     public static final String REQ_TOTAL_SEATS_MIN = "totalSeats must be at least 1";
 
+    /** Request field {@code flightNumber} format is invalid. */
+    public static final String REQ_FLIGHT_NUMBER_FORMAT =
+            "flightNumber must be 2-10 letters, digits, or hyphens";
+    /** Request field {@code origin} is too long. */
+    public static final String REQ_ORIGIN_SIZE = "origin must be at most 64 characters";
+    /** Request field {@code destination} is too long. */
+    public static final String REQ_DESTINATION_SIZE = "destination must be at most 64 characters";
+    /** Request field {@code passengerName} is too long. */
+    public static final String REQ_PASSENGER_NAME_SIZE = "passengerName must be at most 100 characters";
+    /** Request field {@code seats} exceeds the per-booking maximum. */
+    public static final String REQ_SEATS_MAX = "seats must be at most 50";
+    /** Request field {@code totalSeats} exceeds the maximum. */
+    public static final String REQ_TOTAL_SEATS_MAX = "totalSeats must be at most 1000";
+
+    /** Generic request body must be provided (service-level null guard). */
+    public static final String REQUEST_REQUIRED = "request must not be null";
+
     /**
      * Prevents instantiation of this constants holder.
      */
