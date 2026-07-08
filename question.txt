@@ -4,8 +4,6 @@ It was pleasure speaking with you.
 
 As next step of your application process , please complete the below test and share the GitHub link. 
 
-
-
 Take-home task: Flight Ticket Booking API (Spring Boot + Java)
  Design and implement a small REST API for a flight ticket booking system. Share the github project once done.
  ⏱ You’re not expected to spend more than 60 minutes.

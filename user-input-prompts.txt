@@ -202,6 +202,20 @@ why no timing updated for the prompts?
 Added a local received-time to every prompt header and documented the timing
 methodology. Anchored reads: 10:46 (clock) and commits at 10:50 / 10:54 / 10:55 /
 11:02; #11 anchored at 11:03. Earliest prompts (#1–#6, #8–#10) marked "~" approximate.
+-----------------------------------------------------------------------
+ PROMPT #12  |   2026-07-08 11:31   |   Phase: Library choices
+-----------------------------------------------------------------------
+[USER PROMPT — VERBATIM]
+you can use Lombok, modelmapper, zalando logbook probalem handling zalando zally as well
+
+[AI ACTION]
+Assessed each library against the current design and gave a senior recommendation:
+adopt Zalando Logbook (HTTP logging) in the observability branch; keep the custom
+error handler unless RFC 7807 is preferred (then Zalando Problem); skip ModelMapper for
+two trivial explicit mappers; Lombok optional for the config-properties class only;
+Zally as a CI/future item. Paused for the user's decision.
+
+
 =======================================================================
  END OF AUDIT  —  appended chronologically as new prompts arrive.
 =======================================================================
