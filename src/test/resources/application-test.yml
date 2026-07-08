@@ -1,0 +1,9 @@
+flight-booking:
+  seed:
+    enabled: false
+    flights: []
+
+logging:
+  level:
+    org.zalando.logbook: WARN
+    com.thejaswini.flightbooking: INFO
