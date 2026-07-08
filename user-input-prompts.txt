@@ -309,15 +309,44 @@ improvements). Added Postman collection + Newman (verified), zip utility, and Do
  PROMPT #20  |   2026-07-08 ~13:10   |   Phase: Code review (round 2)
 -----------------------------------------------------------------------
 [USER PROMPT — VERBATIM]
-review comments: [detailed PR review, 6 findings]
-  (1) Medium: app defaults to dev profile in packaged application.yml
-  (2) Medium: duplicate flight creation not atomic (exists() then put() race)
-  (3) Low/Med: booking persisted after seat reservation (no transaction)
-  (4) Low: some test assertions too loose; add API tests (409 dup, 400 malformed, create body)
-  (5) Low: ProjectArchiver path bugs (getParent() NPE, relative-path compare)
-  (6) Nit: README stray closing code fence; JaCoCo path misleading on OneDrive
-  Verification: gradlew test 16 passing; coverage 210/272 lines, 15/28 branches.
-"can u let me know ur view?"
+review comments:
+
+went through the PR, overall this is a solid small spring boot take-home - thin controllers,
+validation at the boundary, consistent error shape, and the no-overbooking rule is in the right
+place with Flight.reserve() synchronized and tested under concurrency. couple of things i'd like
+addressed:
+
+- app defaults to the dev profile in the packaged config. application.yml (line 7) sets
+  spring.profiles.active: dev, so the docker/default jar runs with seeded sample data and verbose
+  dev logging unless it's explicitly overridden. i'd remove the active profile from application.yml
+  and set SPRING_PROFILES_ACTIVE=dev only for local runs.
+
+- duplicate flight creation isn't atomic. FlightServiceImpl (line 41) does existsByFlightNumber()
+  then save(), while InMemoryFlightRepository (line 37) uses put. two concurrent creates for the
+  same flight can both pass and one overwrites the other. prefer a repo method backed by putIfAbsent
+  that returns duplicate if an existing flight was present.
+
+- booking persistence happens after the seat reservation. BookingServiceImpl (line 58) reserves
+  seats before saving the booking (line 67). fine for the current in-memory save, but if persistence
+  later fails the seats stay consumed without a booking record. a real storage version should put
+  the seat decrement and booking insert in one transaction.
+
+- tests are good but some assertions are too loose. BookingServiceImplTest (line 60) just verifies
+  save(any()) - capture the Booking and assert flightNumber, passengerName, seats, UUID and
+  createdAt. also add API tests for duplicate flight 409, malformed JSON 400, and the create-flight
+  response body.
+
+- ProjectArchiver has a couple of edge-case path bugs. ProjectArchiver (line 43) can NPE for an
+  output like archive.zip because getParent() is null, and relative output paths may not compare
+  correctly (line 120). resolve output to absolute and test with temp dirs.
+
+- nit: README (line 104) has a stray closing code fence, and the jacoco path (line 74) is
+  misleading on OneDrive because build.gradle redirects reports to temp.
+
+verified: ran gradlew test, 16 tests passing. coverage after the new utility is 210/272 lines,
+15/28 branches.
+
+can u let me know ur view?
 
 [AI ACTION]
 Agreed with all six; implemented on branch fix/review-round-2: profile-less packaged config
