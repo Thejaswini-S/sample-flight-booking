@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "Flight Booking API",
-    "description": "End-to-end booking flow: register a flight, book seats, then verify overbooking (409), unknown flight (404), and validation (400). Each run uses a fresh random flight number so it is re-runnable against a live instance.",
+    "description": "End-to-end booking flow: register a flight (with body assertions), book seats, then verify overbooking (409), unknown flight (404), validation (400), duplicate flight (409), and malformed JSON (400). Each run uses a fresh random flight number so it is re-runnable against a live instance.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -25,7 +25,13 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('201 Created', () => pm.response.to.have.status(201));"
+              "pm.test('201 Created', () => pm.response.to.have.status(201));",
+              "pm.test('body reflects the created flight', () => {",
+              "  const j = pm.response.json();",
+              "  pm.expect(j.flightNumber).to.eql(pm.collectionVariables.get('flight'));",
+              "  pm.expect(j.totalSeats).to.eql(5);",
+              "  pm.expect(j.availableSeats).to.eql(5);",
+              "});"
             ]
           }
         }
@@ -119,6 +125,48 @@
         "header": [ { "key": "Content-Type", "value": "application/json" } ],
         "url": { "raw": "{{baseUrl}}/api/v1/bookings", "host": [ "{{baseUrl}}" ], "path": [ "api", "v1", "bookings" ] },
         "body": { "mode": "raw", "raw": "{\"flightNumber\":\"\",\"passengerName\":\"\",\"seats\":0}" }
+      }
+    },
+    {
+      "name": "Duplicate flight -> 409",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('409 Conflict', () => pm.response.to.have.status(409));",
+              "pm.test('errorCode FB-409-002', () => pm.expect(pm.response.json().errorCode).to.eql('FB-409-002'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "url": { "raw": "{{baseUrl}}/api/v1/flights", "host": [ "{{baseUrl}}" ], "path": [ "api", "v1", "flights" ] },
+        "body": { "mode": "raw", "raw": "{\"flightNumber\":\"{{flight}}\",\"origin\":\"BLR\",\"destination\":\"DXB\",\"totalSeats\":5}" }
+      }
+    },
+    {
+      "name": "Malformed JSON -> 400",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('400 Bad Request', () => pm.response.to.have.status(400));",
+              "pm.test('errorCode FB-400-002', () => pm.expect(pm.response.json().errorCode).to.eql('FB-400-002'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "url": { "raw": "{{baseUrl}}/api/v1/bookings", "host": [ "{{baseUrl}}" ], "path": [ "api", "v1", "bookings" ] },
+        "body": { "mode": "raw", "raw": "{\"flightNumber\":\"AI-1\"," }
       }
     }
   ]

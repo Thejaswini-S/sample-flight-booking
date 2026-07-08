@@ -382,6 +382,38 @@ fail-fast (throws IllegalStateException if releasing more than is reserved) inst
 two new FlightTest cases; clarified README so `dev` is described as the bootRun default only. Tests green.
 
 
+-----------------------------------------------------------------------
+ PROMPT #22  |   2026-07-08 ~15:55   |   Phase: Coverage review vs spec
+-----------------------------------------------------------------------
+[USER PROMPT — VERBATIM]
+compared to question.txt, the application layer is covered well.
+
+covered: spring boot + java + gradle; single instance, in-memory; no auth/rate-limiting/search;
+client books by known flightNumber; no booking retrieval API; no overbooking (Flight.reserve() +
+BookingServiceImpl); REST endpoints/status codes; POST /api/v1/flights + POST /api/v1/bookings;
+201/400/404/409 handled; README deliverables; AI prompt audit + IMPROVEMENTS.md.
+
+tests: unit (FlightTest, BookingServiceImplTest, FlightServiceImplTest, ProjectArchiverTest) and
+integration (full flow, overbooking 409, unknown 404, validation 400, duplicate 409, malformed 400,
+create-flight body) all good. ran gradlew test: BUILD SUCCESSFUL.
+
+small gaps:
+- the postman collection doesn't fully match the integration coverage. it has register, book,
+  overbook, unknown flight, invalid body - but not duplicate flight, malformed json, or the
+  create-flight response body assertions.
+- one service edge test worth adding: if bookingRepository.save() throws, assert BookingServiceImpl
+  releases the reserved seats.
+
+so: application + unit + integration coverage is interview-ready; postman is acceptable but not
+complete compared to the INT suite.
+
+[AI ACTION]
+Extended the Postman collection to match the integration suite: create-flight body assertions +
+duplicate flight (409, FB-409-002) + malformed JSON (400, FB-400-002). Newman re-run: 7 requests /
+14 assertions, all passing. The rollback service test was already added in the prior commit
+(a0fa982, releasesSeatsWhenPersistenceFails) — the reviewer had seen a slightly earlier commit.
+
+
 =======================================================================
  END OF AUDIT  —  appended chronologically as new prompts arrive.
 =======================================================================
