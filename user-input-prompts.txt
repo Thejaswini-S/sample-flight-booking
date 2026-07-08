@@ -216,6 +216,56 @@ two trivial explicit mappers; Lombok optional for the config-properties class on
 Zally as a CI/future item. Paused for the user's decision.
 
 
+-----------------------------------------------------------------------
+ PROMPT #13  |   2026-07-08 ~11:34   |   Phase: Mapper choice
+-----------------------------------------------------------------------
+[USER PROMPT — VERBATIM]
+mapstruct instead of modelmapper, i want the code genration to be in compile time,where the modelmapper is dyncmially at runtime.
+
+[AI ACTION]
+Adopted MapStruct (compile-time, type-safe) over ModelMapper (runtime reflection).
+Added deps + FlightMapper/BookingMapper; services use injected mappers.
+
+
+-----------------------------------------------------------------------
+ PROMPT #14  |   2026-07-08 ~11:34   |   Phase: Parallelism
+-----------------------------------------------------------------------
+[USER PROMPT — VERBATIM]
+span multi agent for parllel agents usage. i think the dev work is happening slow.
+
+[AI ACTION]
+Explained that a single shared working tree + gated one-PR-at-a-time flow makes
+parallel git-branch agents collide; proposed fanning out independent artifacts
+(Dockerfile, Postman, zip, logback) to parallel subagents after PR #1. Streamlined pace.
+
+
+-----------------------------------------------------------------------
+ PROMPT #15  |   2026-07-08 ~11:52   |   Phase: Design patterns
+-----------------------------------------------------------------------
+[USER PROMPT — VERBATIM]
+aint we using  SOLID design patterns like builder pattern for flighetrresponse obj? i thouhht you have in mind to use SOLID n design patterns wherever needed
+
+[AI ACTION]
+Summarized SOLID + patterns already in use (DI/Strategy, Factory via MapStruct,
+Singleton, Template Method, DTO) and added the Builder pattern to the response DTOs.
+
+
+-----------------------------------------------------------------------
+ PROMPT #16  |   2026-07-08 12:28   |   Phase: PR review + actuators
+-----------------------------------------------------------------------
+[USER PROMPT — VERBATIM]
+are we implementing health check and actuators as well?
+[PR review link: pull/1/changes#r3541832926]
+I added PR review, please fix the comments and close them after deliverting fix, I will review again.
+are you adding the prompts to the user input file as mentioned?
+
+[AI ACTION]
+Read the 5 (draft) PR review comments and fixed them: request-DTO validation
+(@Pattern/@Size/@Max) caught at the controller boundary, Builder pattern on request
+DTOs, and a service-layer nit. Actuator/health planned for feature/observability.
+Caught the audit up with prompts #13–#16.
+
+
 =======================================================================
  END OF AUDIT  —  appended chronologically as new prompts arrive.
 =======================================================================
