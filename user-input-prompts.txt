@@ -414,6 +414,38 @@ duplicate flight (409, FB-409-002) + malformed JSON (400, FB-400-002). Newman re
 (a0fa982, releasesSeatsWhenPersistenceFails) — the reviewer had seen a slightly earlier commit.
 
 
+-----------------------------------------------------------------------
+ PROMPT #23  |   2026-07-08 ~16:05   |   Phase: Code review (round 4, scope-filtered)
+-----------------------------------------------------------------------
+[USER PROMPT — VERBATIM]
+what do u think? [recalibrated, in-scope-only PR review]
+
+A. worth fixing now:
+- flight-number normalization is the one genuine bug: the regex allows mixed case but
+  InMemoryFlightRepository is exact-match, so register AI-101 + book ai-101 -> 404. trim + upper-case
+  the flight number at the boundary (register and book) so the same flight isn't addressable under
+  two spellings.
+
+B. worth tightening in tests:
+- harden the concurrency test in FlightTest: add a CountDownLatch start gate so all threads hit
+  reserve() at once (real contention), and inspect the Futures so a thrown exception can't be swallowed.
+- add validation-boundary tests: @Pattern regex, @Max(50) seats, @Size(100) name, @Max(1000)
+  totalSeats edges are untested (only empty/zero is).
+
+C. worth listing in README "what i'd improve" (don't build):
+- idempotency on POST /bookings - a client retry after a timeout double-books; note an
+  Idempotency-Key header as future work.
+- better insufficient-seats message - BookingServiceImpl re-reads getAvailableSeats() after a failed
+  reserve, so under load the number can be inconsistent. have reserve() return the shortfall instead.
+
+[AI ACTION]
+Agreed with all. On branch fix/review-round-4: canonicalized flight numbers via
+Flight.normalizeNumber() (trim + upper, Locale.ROOT), applied in the constructor and the book lookup,
+with unit + integration case-insensitive tests; hardened the concurrency test (CountDownLatch start
+gate + Future.get() inspection); added boundary tests (seats>50, totalSeats>1000, name>100, bad
+format). Added C1/C2 to the README "what I'd improve". 29 tests, 0 failures.
+
+
 =======================================================================
  END OF AUDIT  —  appended chronologically as new prompts arrive.
 =======================================================================

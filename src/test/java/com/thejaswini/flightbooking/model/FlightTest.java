@@ -3,10 +3,14 @@ package com.thejaswini.flightbooking.model;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -69,24 +73,32 @@ class FlightTest {
      */
     @Test
     @DisplayName("reserve() never overbooks under concurrency (exactly capacity succeed)")
-    void concurrentReservesNeverOverbook() throws InterruptedException {
+    void concurrentReservesNeverOverbook() throws InterruptedException, ExecutionException {
         int capacity = 50;
         int attempts = 200;
         Flight flight = new Flight("AI-1", "BLR", "DXB", capacity);
         ExecutorService pool = Executors.newFixedThreadPool(16);
-        AtomicInteger success = new AtomicInteger();
+        CountDownLatch startGate = new CountDownLatch(1);
+        List<Future<Boolean>> futures = new ArrayList<>();
 
         for (int i = 0; i < attempts; i++) {
-            pool.submit(() -> {
-                if (flight.reserve(1)) {
-                    success.incrementAndGet();
-                }
-            });
+            futures.add(pool.submit(() -> {
+                startGate.await();          // hold every thread here...
+                return flight.reserve(1);   // ...then release them into reserve() together
+            }));
+        }
+        startGate.countDown();              // start all attempts simultaneously
+
+        int success = 0;
+        for (Future<Boolean> future : futures) {
+            if (Boolean.TRUE.equals(future.get())) {   // get() also surfaces any thrown exception
+                success++;
+            }
         }
         pool.shutdown();
 
         assertThat(pool.awaitTermination(10, TimeUnit.SECONDS)).isTrue();
-        assertThat(success.get()).isEqualTo(capacity);
+        assertThat(success).isEqualTo(capacity);
         assertThat(flight.getAvailableSeats()).isZero();
     }
 
@@ -107,5 +119,13 @@ class FlightTest {
         Flight flight = new Flight("AI-1", "BLR", "DXB", 10);
         flight.reserve(2);
         assertThatThrownBy(() -> flight.release(3)).isInstanceOf(IllegalStateException.class);
+    }
+
+    /** Flight numbers are canonicalized (trimmed + upper-cased) so lookups are case-insensitive. */
+    @Test
+    @DisplayName("normalizeNumber() trims and upper-cases; the constructor stores the canonical form")
+    void normalizeNumberCanonicalizes() {
+        assertThat(Flight.normalizeNumber("  ai-101 ")).isEqualTo("AI-101");
+        assertThat(new Flight("ai-202", "BLR", "DXB", 5).getFlightNumber()).isEqualTo("AI-202");
     }
 }

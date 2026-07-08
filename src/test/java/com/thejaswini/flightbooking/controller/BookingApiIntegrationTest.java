@@ -107,4 +107,57 @@ class BookingApiIntegrationTest {
                 .andExpect(jsonPath("$.totalSeats").value(42))
                 .andExpect(jsonPath("$.availableSeats").value(42));
     }
+
+    /** Flight numbers are case-insensitive: a flight registered as AI-CASE is bookable as ai-case. */
+    @Test
+    @DisplayName("flight number is case-insensitive between register and book")
+    void flightNumberIsCaseInsensitive() throws Exception {
+        mockMvc.perform(post("/api/v1/flights").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"flightNumber\":\"AI-CASE\",\"origin\":\"BLR\",\"destination\":\"DXB\",\"totalSeats\":5}"))
+                .andExpect(status().isCreated());
+        mockMvc.perform(post("/api/v1/bookings").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"flightNumber\":\"ai-case\",\"passengerName\":\"Case Test\",\"seats\":1}"))
+                .andExpect(status().isCreated());
+    }
+
+    /** Boundary: seats above the per-booking max (50) is rejected with 400. */
+    @Test
+    @DisplayName("seats over the max (50) returns 400")
+    void seatsOverMaxReturns400() throws Exception {
+        mockMvc.perform(post("/api/v1/bookings").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"flightNumber\":\"AI-101\",\"passengerName\":\"X\",\"seats\":51}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("FB-400-001"));
+    }
+
+    /** Boundary: totalSeats above the max (1000) is rejected with 400. */
+    @Test
+    @DisplayName("totalSeats over the max (1000) returns 400")
+    void totalSeatsOverMaxReturns400() throws Exception {
+        mockMvc.perform(post("/api/v1/flights").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"flightNumber\":\"IT-BIG\",\"totalSeats\":1001}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("FB-400-001"));
+    }
+
+    /** Boundary: a passenger name longer than the max (100) is rejected with 400. */
+    @Test
+    @DisplayName("passenger name over the max length returns 400")
+    void longPassengerNameReturns400() throws Exception {
+        String name = "a".repeat(101);
+        mockMvc.perform(post("/api/v1/bookings").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"flightNumber\":\"AI-101\",\"passengerName\":\"" + name + "\",\"seats\":1}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("FB-400-001"));
+    }
+
+    /** Boundary: a flight number violating the format pattern is rejected with 400. */
+    @Test
+    @DisplayName("bad flight-number format returns 400")
+    void badFlightNumberFormatReturns400() throws Exception {
+        mockMvc.perform(post("/api/v1/bookings").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"flightNumber\":\"AB CD\",\"passengerName\":\"X\",\"seats\":1}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("FB-400-001"));
+    }
 }
