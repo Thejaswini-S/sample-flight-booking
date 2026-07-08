@@ -64,7 +64,14 @@ public class BookingServiceImpl implements BookingService {
 
         Booking booking = new Booking(UUID.randomUUID(), flight.getFlightNumber(),
                 request.passengerName(), request.seats(), Instant.now());
-        bookingRepository.save(booking);
+        try {
+            bookingRepository.save(booking);
+        } catch (RuntimeException ex) {
+            // Compensating action: return the seats so a persistence failure can't leave the flight
+            // with seats consumed but no booking record (relevant once storage is durable).
+            flight.release(request.seats());
+            throw ex;
+        }
         log.info("Confirmed booking {} on {} for {} seat(s)",
                 booking.id(), booking.flightNumber(), booking.seats());
         return bookingMapper.toResponse(booking);

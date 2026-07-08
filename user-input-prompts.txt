@@ -305,6 +305,27 @@ Swagger/actuator, tests, Docker, zip utility, and application-wise + infra-wise
 improvements). Added Postman collection + Newman (verified), zip utility, and Dockerfile.
 
 
+-----------------------------------------------------------------------
+ PROMPT #20  |   2026-07-08 ~13:10   |   Phase: Code review (round 2)
+-----------------------------------------------------------------------
+[USER PROMPT — VERBATIM]
+review comments: [detailed PR review, 6 findings]
+  (1) Medium: app defaults to dev profile in packaged application.yml
+  (2) Medium: duplicate flight creation not atomic (exists() then put() race)
+  (3) Low/Med: booking persisted after seat reservation (no transaction)
+  (4) Low: some test assertions too loose; add API tests (409 dup, 400 malformed, create body)
+  (5) Low: ProjectArchiver path bugs (getParent() NPE, relative-path compare)
+  (6) Nit: README stray closing code fence; JaCoCo path misleading on OneDrive
+  Verification: gradlew test 16 passing; coverage 210/272 lines, 15/28 branches.
+"can u let me know ur view?"
+
+[AI ACTION]
+Agreed with all six; implemented on branch fix/review-round-2: profile-less packaged config
+(bootRun sets dev locally), atomic FlightRepository.saveIfAbsent (putIfAbsent), compensating
+Flight.release() on save failure, ArgumentCaptor + new API tests (409/400/create-body),
+ProjectArchiver absolute-path fix + ProjectArchiverTest, README fence + JaCoCo note. Tests green.
+
+
 =======================================================================
  END OF AUDIT  —  appended chronologically as new prompts arrive.
 =======================================================================

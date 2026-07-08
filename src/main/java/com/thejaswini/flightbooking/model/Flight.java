@@ -58,6 +58,20 @@ public class Flight {
         return true;
     }
 
+    /**
+     * Returns previously reserved seats to availability (a compensating action used if a booking
+     * fails to persist after a successful {@link #reserve(int)}). Availability never exceeds the
+     * flight's total capacity.
+     *
+     * @param seats number of seats to release (must be positive)
+     */
+    public synchronized void release(int seats) {
+        if (seats <= 0) {
+            throw new IllegalArgumentException(ValidationMessages.RESERVE_SEATS_POSITIVE);
+        }
+        availableSeats = Math.min(totalSeats, availableSeats + seats);
+    }
+
     /** @return the unique flight number used to identify and book this flight */
     public String getFlightNumber() {
         return flightNumber;

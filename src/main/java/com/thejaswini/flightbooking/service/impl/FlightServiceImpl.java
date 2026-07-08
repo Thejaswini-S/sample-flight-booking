@@ -38,12 +38,12 @@ public class FlightServiceImpl implements FlightService {
     @Override
     public FlightResponse createFlight(FlightRequest request) {
         Objects.requireNonNull(request, ValidationMessages.REQUEST_REQUIRED);
-        if (flightRepository.existsByFlightNumber(request.flightNumber())) {
+        Flight flight = new Flight(
+                request.flightNumber(), request.origin(), request.destination(), request.totalSeats());
+        if (flightRepository.saveIfAbsent(flight).isPresent()) {
             throw new DuplicateFlightException(request.flightNumber());
         }
-        Flight saved = flightRepository.save(new Flight(
-                request.flightNumber(), request.origin(), request.destination(), request.totalSeats()));
-        log.info("Registered flight {} with {} seats", saved.getFlightNumber(), saved.getTotalSeats());
-        return flightMapper.toResponse(saved);
+        log.info("Registered flight {} with {} seats", flight.getFlightNumber(), flight.getTotalSeats());
+        return flightMapper.toResponse(flight);
     }
 }

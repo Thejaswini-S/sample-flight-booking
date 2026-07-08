@@ -12,6 +12,7 @@ import com.thejaswini.flightbooking.repository.FlightRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -57,7 +58,15 @@ class BookingServiceImplTest {
 
         assertThat(result).isEqualTo(expected);
         assertThat(flight.getAvailableSeats()).isEqualTo(8);
-        verify(bookingRepository).save(any(Booking.class));
+
+        ArgumentCaptor<Booking> captor = ArgumentCaptor.forClass(Booking.class);
+        verify(bookingRepository).save(captor.capture());
+        Booking saved = captor.getValue();
+        assertThat(saved.flightNumber()).isEqualTo("AI-1");
+        assertThat(saved.passengerName()).isEqualTo("Thejaswini");
+        assertThat(saved.seats()).isEqualTo(2);
+        assertThat(saved.id()).isNotNull();
+        assertThat(saved.createdAt()).isNotNull();
     }
 
     /** Booking a flight that does not exist yields 404-mapped FlightNotFoundException; nothing is saved. */

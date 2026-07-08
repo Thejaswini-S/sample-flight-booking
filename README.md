@@ -71,8 +71,10 @@ npx newman run postman/FlightBooking.postman_collection.json -e postman/FlightBo
 
 ## Tests
 ```bash
-./gradlew test   # JaCoCo report: build/reports/jacoco/test/html/index.html
+./gradlew test   # JaCoCo HTML report: <gradle-build-dir>/reports/jacoco/test/html/index.html
 ```
+> Note: on OneDrive-synced checkouts the Gradle build dir is redirected out of the sync tree
+> (see `build.gradle`), so `<gradle-build-dir>` may be a temp path rather than `./build`.
 - **Unit** — `Flight` overbooking guard incl. a concurrency proof (200 parallel bookings on 50 seats → exactly 50 succeed); both services with mocked dependencies.
 - **Integration** — full-stack MockMvc (`201` / `409` / `404` / `400`).
 
@@ -101,4 +103,3 @@ Zips source + docs + README into `dist/flight-booking-<timestamp>.zip`, skipping
 - **Observability**: metrics (Micrometer → Prometheus/Grafana), tracing (OpenTelemetry).
 - Horizontal scaling would require moving seat state out of process memory (e.g., Redis or a DB row
   with an atomic decrement / optimistic locking) since the current guard is per-instance by design.
-```
