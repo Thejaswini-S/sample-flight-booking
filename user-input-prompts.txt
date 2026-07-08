@@ -446,6 +446,26 @@ gate + Future.get() inspection); added boundary tests (seats>50, totalSeats>1000
 format). Added C1/C2 to the README "what I'd improve". 29 tests, 0 failures.
 
 
+-----------------------------------------------------------------------
+ PROMPT #24  |   2026-07-08 ~17:55   |   Phase: Dev tooling (devctl)
+-----------------------------------------------------------------------
+[USER PROMPT — VERBATIM]
+do u think we can convert this to devctl ps1 and devctl sh? which can do all dev utilites like resrt seerver stop sart sever run tests build  and run tests and run docker and tail logs view logs of time stmp based. etc etc?
+
+I prefer both long and short hands code for the devctl args please
+
+[AI ACTION]
+Replaced the two start-server scripts with a single developer-control tool in both
+flavors — devctl.ps1 (Windows/PowerShell) and devctl.sh (macOS/Linux) — each command
+exposing a long + short alias, and options with long/short forms. Commands: start|up,
+stop|down, restart|re, status|st, build|b, test|t, zip|z, docker-build|db,
+docker-run|dr, docker-stop|dx, docker-logs|dl, logs|l (-n/--lines, -s/--since
+timestamp filter, -f/--follow), open|o, help|h. Port 8081 / log path / image name are
+centralized at the top of each script; added /.devctl/ (runtime PID state) to
+.gitignore. Verified live: help, status, start, restart, stop, logs (static + --since),
+build, test, zip; the docker-* commands are correct wrappers (daemon was off at test time).
+
+
 =======================================================================
  END OF AUDIT  —  appended chronologically as new prompts arrive.
 =======================================================================
