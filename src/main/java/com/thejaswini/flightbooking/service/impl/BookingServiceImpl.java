@@ -51,9 +51,10 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public BookingResponse book(BookingRequest request) {
         Objects.requireNonNull(request, ValidationMessages.REQUEST_REQUIRED);
+        String flightNumber = Flight.normalizeNumber(request.flightNumber());
 
-        Flight flight = flightRepository.findByFlightNumber(request.flightNumber())
-                .orElseThrow(() -> new FlightNotFoundException(request.flightNumber()));
+        Flight flight = flightRepository.findByFlightNumber(flightNumber)
+                .orElseThrow(() -> new FlightNotFoundException(flightNumber));
 
         if (!flight.reserve(request.seats())) {
             log.warn("Rejected booking on {}: requested {} but only {} available",

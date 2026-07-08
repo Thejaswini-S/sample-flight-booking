@@ -94,7 +94,10 @@ Zips source + docs + README into `dist/flight-booking-<timestamp>.zip`, skipping
 ## What I'd improve with more time
 **Application-wise**
 - Booking **cancellation** and a paginated read API (with ETag / `If-Match` concurrency control).
-- **Idempotency keys** on booking so client retries are safe.
+- **Idempotency** on `POST /bookings` (e.g. an `Idempotency-Key` header) so a client retry after a
+  timeout doesn't double-book.
+- Have `Flight.reserve()` return the seat **shortfall** atomically instead of re-reading
+  `getAvailableSeats()` after a failed reserve, so the insufficient-seats message stays consistent under load.
 - Richer domain (fares, seat classes/maps, passenger records) + persistence (JPA + Flyway).
 - **RFC 7807 Problem Details** (Zalando Problem) for errors; a formal API-versioning strategy.
 - Property-based and load tests around the concurrency guard.

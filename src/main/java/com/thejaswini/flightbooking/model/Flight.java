@@ -2,6 +2,7 @@ package com.thejaswini.flightbooking.model;
 
 import com.thejaswini.flightbooking.constant.ValidationMessages;
 
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -30,7 +31,7 @@ public class Flight {
      * @throws IllegalArgumentException if {@code totalSeats} is not positive
      */
     public Flight(String flightNumber, String origin, String destination, int totalSeats) {
-        this.flightNumber = Objects.requireNonNull(flightNumber, ValidationMessages.FLIGHT_NUMBER_REQUIRED);
+        this.flightNumber = normalizeNumber(flightNumber);
         if (totalSeats <= 0) {
             throw new IllegalArgumentException(ValidationMessages.TOTAL_SEATS_POSITIVE);
         }
@@ -38,6 +39,19 @@ public class Flight {
         this.destination = destination;
         this.totalSeats = totalSeats;
         this.availableSeats = totalSeats;
+    }
+
+    /**
+     * Canonicalizes a flight number so the same flight is never addressable under two spellings:
+     * trims surrounding whitespace and upper-cases it. Flight numbers are therefore case-insensitive.
+     *
+     * @param flightNumber the raw flight number (must not be {@code null})
+     * @return the canonical (trimmed, upper-cased) flight number
+     * @throws NullPointerException if {@code flightNumber} is {@code null}
+     */
+    public static String normalizeNumber(String flightNumber) {
+        Objects.requireNonNull(flightNumber, ValidationMessages.FLIGHT_NUMBER_REQUIRED);
+        return flightNumber.trim().toUpperCase(Locale.ROOT);
     }
 
     /**
