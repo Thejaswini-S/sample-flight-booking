@@ -73,4 +73,38 @@ class BookingApiIntegrationTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errorCode").value("FB-400-001"));
     }
+
+    /** Registering the same flight number twice returns 409 (FB-409-002) on the second attempt. */
+    @Test
+    @DisplayName("duplicate flight registration returns 409 (FB-409-002)")
+    void duplicateFlightReturns409() throws Exception {
+        String body = "{\"flightNumber\":\"IT-DUP\",\"origin\":\"BLR\",\"destination\":\"DXB\",\"totalSeats\":5}";
+        mockMvc.perform(post("/api/v1/flights").contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isCreated());
+        mockMvc.perform(post("/api/v1/flights").contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.errorCode").value("FB-409-002"));
+    }
+
+    /** A syntactically broken JSON body is rejected with 400 (FB-400-002 malformed request). */
+    @Test
+    @DisplayName("malformed JSON returns 400 (FB-400-002)")
+    void malformedJsonReturns400() throws Exception {
+        mockMvc.perform(post("/api/v1/bookings").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"flightNumber\":\"AI-1\","))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("FB-400-002"));
+    }
+
+    /** Creating a flight echoes its details back with availableSeats == totalSeats. */
+    @Test
+    @DisplayName("create-flight response body reflects full availability")
+    void createFlightReturnsBody() throws Exception {
+        mockMvc.perform(post("/api/v1/flights").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"flightNumber\":\"IT-BODY\",\"origin\":\"BLR\",\"destination\":\"DXB\",\"totalSeats\":42}"))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.flightNumber").value("IT-BODY"))
+                .andExpect(jsonPath("$.totalSeats").value(42))
+                .andExpect(jsonPath("$.availableSeats").value(42));
+    }
 }

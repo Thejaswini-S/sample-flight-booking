@@ -27,16 +27,8 @@ public class InMemoryFlightRepository implements FlightRepository {
 
     /** {@inheritDoc} */
     @Override
-    public boolean existsByFlightNumber(String flightNumber) {
-        Objects.requireNonNull(flightNumber, ValidationMessages.FLIGHT_NUMBER_REQUIRED);
-        return flights.containsKey(flightNumber);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Flight save(Flight flight) {
+    public Optional<Flight> saveIfAbsent(Flight flight) {
         Objects.requireNonNull(flight, ValidationMessages.FLIGHT_REQUIRED);
-        flights.put(flight.getFlightNumber(), flight);
-        return flight;
+        return Optional.ofNullable(flights.putIfAbsent(flight.getFlightNumber(), flight));
     }
 }

@@ -19,18 +19,11 @@ public interface FlightRepository {
     Optional<Flight> findByFlightNumber(String flightNumber);
 
     /**
-     * Reports whether a flight with the given number already exists.
+     * Atomically stores the flight only if no flight with the same number already exists.
      *
-     * @param flightNumber the flight number to check (must not be {@code null})
-     * @return {@code true} if a flight with that number is stored
+     * @param flight the flight to insert (must not be {@code null})
+     * @return {@link Optional#empty()} if the flight was inserted, or the existing flight if one
+     *         with the same number was already present (nothing is stored in that case)
      */
-    boolean existsByFlightNumber(String flightNumber);
-
-    /**
-     * Stores (inserts or replaces) the given flight, keyed by its flight number.
-     *
-     * @param flight the flight to persist (must not be {@code null})
-     * @return the stored flight instance
-     */
-    Flight save(Flight flight);
+    Optional<Flight> saveIfAbsent(Flight flight);
 }

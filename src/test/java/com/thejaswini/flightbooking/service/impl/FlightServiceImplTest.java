@@ -13,6 +13,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -43,14 +45,13 @@ class FlightServiceImplTest {
                 .flightNumber("AI-1").origin("BLR").destination("DXB").totalSeats(10).build();
         FlightResponse expected = FlightResponse.builder()
                 .flightNumber("AI-1").totalSeats(10).availableSeats(10).build();
-        when(flightRepository.existsByFlightNumber("AI-1")).thenReturn(false);
-        when(flightRepository.save(any(Flight.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(flightRepository.saveIfAbsent(any(Flight.class))).thenReturn(Optional.empty());
         when(flightMapper.toResponse(any(Flight.class))).thenReturn(expected);
 
         FlightResponse result = service.createFlight(request);
 
         assertThat(result).isEqualTo(expected);
-        verify(flightRepository).save(any(Flight.class));
+        verify(flightRepository).saveIfAbsent(any(Flight.class));
     }
 
     /** Idempotency/safety: registering an existing flight number is rejected and nothing is saved. */
@@ -58,11 +59,12 @@ class FlightServiceImplTest {
     @DisplayName("rejects a duplicate flight number and saves nothing")
     void rejectsDuplicateFlight() {
         FlightRequest request = FlightRequest.builder().flightNumber("AI-1").totalSeats(10).build();
-        when(flightRepository.existsByFlightNumber("AI-1")).thenReturn(true);
+        when(flightRepository.saveIfAbsent(any(Flight.class)))
+                .thenReturn(Optional.of(new Flight("AI-1", "BLR", "DXB", 10)));
 
         assertThatThrownBy(() -> service.createFlight(request))
                 .isInstanceOf(DuplicateFlightException.class);
-        verify(flightRepository, never()).save(any());
+        verify(flightMapper, never()).toResponse(any());
     }
 
     /** Defensive boundary check: a null request fails fast rather than NPE-ing deeper in the flow. */

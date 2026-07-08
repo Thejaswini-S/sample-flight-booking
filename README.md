@@ -18,8 +18,9 @@ Spring Boot + Java 17 (Gradle), single instance, no database, no auth — per th
 # from the project root  (Windows: .\gradlew.bat bootRun)
 ./gradlew bootRun
 ```
-Starts on **http://localhost:8081** with the `dev` profile, which seeds sample flights
-(`AI-101` = 3 seats, `AI-202` = 60, `AI-303` = 10) so you can book immediately.
+Starts on **http://localhost:8081**. `bootRun` activates the `dev` profile, which seeds sample
+flights (`AI-101` = 3 seats, `AI-202` = 60, `AI-303` = 10) so you can book immediately. (The
+packaged jar / Docker image runs profile-less by default — see Profiles below.)
 
 - Swagger UI: http://localhost:8081/swagger-ui.html
 - OpenAPI JSON: http://localhost:8081/v3/api-docs
@@ -32,8 +33,10 @@ docker run -p 8081:8081 flight-booking
 ```
 
 ### Profiles
-- `dev` (default) — seeds sample flights, verbose logging.
+- `dev` — the **`bootRun` default** (local runs only): seeds sample flights, verbose logging.
 - `prod` — no seed data, quieter logging: `./gradlew bootRun --args='--spring.profiles.active=prod'`.
+- **No profile** — the packaged `jar` / Docker default: no seed data, INFO logging. Set
+  `SPRING_PROFILES_ACTIVE` (or `--spring.profiles.active`) to choose a profile.
 
 ## API
 Base path `/api/v1`.
@@ -71,8 +74,10 @@ npx newman run postman/FlightBooking.postman_collection.json -e postman/FlightBo
 
 ## Tests
 ```bash
-./gradlew test   # JaCoCo report: build/reports/jacoco/test/html/index.html
+./gradlew test   # JaCoCo HTML report: <gradle-build-dir>/reports/jacoco/test/html/index.html
 ```
+> Note: on OneDrive-synced checkouts the Gradle build dir is redirected out of the sync tree
+> (see `build.gradle`), so `<gradle-build-dir>` may be a temp path rather than `./build`.
 - **Unit** — `Flight` overbooking guard incl. a concurrency proof (200 parallel bookings on 50 seats → exactly 50 succeed); both services with mocked dependencies.
 - **Integration** — full-stack MockMvc (`201` / `409` / `404` / `400`).
 
@@ -101,4 +106,3 @@ Zips source + docs + README into `dist/flight-booking-<timestamp>.zip`, skipping
 - **Observability**: metrics (Micrometer → Prometheus/Grafana), tracing (OpenTelemetry).
 - Horizontal scaling would require moving seat state out of process memory (e.g., Redis or a DB row
   with an atomic decrement / optimistic locking) since the current guard is per-instance by design.
-```

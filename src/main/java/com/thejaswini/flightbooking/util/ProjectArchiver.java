@@ -40,10 +40,11 @@ public final class ProjectArchiver {
      */
     public static void main(String[] args) throws IOException {
         Path root = Paths.get("").toAbsolutePath();
-        Path output = (args.length > 0)
+        Path output = ((args.length > 0)
                 ? Paths.get(args[0])
                 : root.resolve("dist").resolve("flight-booking-"
-                        + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss")) + ".zip");
+                        + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss")) + ".zip"))
+                .toAbsolutePath();
         Files.createDirectories(output.getParent());
 
         int count = archive(root, output);

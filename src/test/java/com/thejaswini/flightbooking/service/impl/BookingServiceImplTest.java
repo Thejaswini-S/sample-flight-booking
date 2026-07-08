@@ -12,6 +12,7 @@ import com.thejaswini.flightbooking.repository.FlightRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -21,6 +22,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -57,7 +59,15 @@ class BookingServiceImplTest {
 
         assertThat(result).isEqualTo(expected);
         assertThat(flight.getAvailableSeats()).isEqualTo(8);
-        verify(bookingRepository).save(any(Booking.class));
+
+        ArgumentCaptor<Booking> captor = ArgumentCaptor.forClass(Booking.class);
+        verify(bookingRepository).save(captor.capture());
+        Booking saved = captor.getValue();
+        assertThat(saved.flightNumber()).isEqualTo("AI-1");
+        assertThat(saved.passengerName()).isEqualTo("Thejaswini");
+        assertThat(saved.seats()).isEqualTo(2);
+        assertThat(saved.id()).isNotNull();
+        assertThat(saved.createdAt()).isNotNull();
     }
 
     /** Booking a flight that does not exist yields 404-mapped FlightNotFoundException; nothing is saved. */
@@ -92,5 +102,20 @@ class BookingServiceImplTest {
     @DisplayName("rejects a null request (defensive null-check)")
     void rejectsNullRequest() {
         assertThatThrownBy(() -> service.book(null)).isInstanceOf(NullPointerException.class);
+    }
+
+    /** If persistence fails after a successful reserve, the seats are released and the error propagates. */
+    @Test
+    @DisplayName("releases seats and propagates when persistence fails after reserve")
+    void releasesSeatsWhenPersistenceFails() {
+        Flight flight = new Flight("AI-1", "BLR", "DXB", 10);
+        RuntimeException boom = new RuntimeException("storage down");
+        when(flightRepository.findByFlightNumber("AI-1")).thenReturn(Optional.of(flight));
+        doThrow(boom).when(bookingRepository).save(any(Booking.class));
+
+        assertThatThrownBy(() -> service.book(
+                BookingRequest.builder().flightNumber("AI-1").passengerName("X").seats(3).build()))
+                .isSameAs(boom);
+        assertThat(flight.getAvailableSeats()).isEqualTo(10);
     }
 }

@@ -305,6 +305,115 @@ Swagger/actuator, tests, Docker, zip utility, and application-wise + infra-wise
 improvements). Added Postman collection + Newman (verified), zip utility, and Dockerfile.
 
 
+-----------------------------------------------------------------------
+ PROMPT #20  |   2026-07-08 ~13:10   |   Phase: Code review (round 2)
+-----------------------------------------------------------------------
+[USER PROMPT — VERBATIM]
+review comments:
+
+went through the PR, overall this is a solid small spring boot take-home - thin controllers,
+validation at the boundary, consistent error shape, and the no-overbooking rule is in the right
+place with Flight.reserve() synchronized and tested under concurrency. couple of things i'd like
+addressed:
+
+- app defaults to the dev profile in the packaged config. application.yml (line 7) sets
+  spring.profiles.active: dev, so the docker/default jar runs with seeded sample data and verbose
+  dev logging unless it's explicitly overridden. i'd remove the active profile from application.yml
+  and set SPRING_PROFILES_ACTIVE=dev only for local runs.
+
+- duplicate flight creation isn't atomic. FlightServiceImpl (line 41) does existsByFlightNumber()
+  then save(), while InMemoryFlightRepository (line 37) uses put. two concurrent creates for the
+  same flight can both pass and one overwrites the other. prefer a repo method backed by putIfAbsent
+  that returns duplicate if an existing flight was present.
+
+- booking persistence happens after the seat reservation. BookingServiceImpl (line 58) reserves
+  seats before saving the booking (line 67). fine for the current in-memory save, but if persistence
+  later fails the seats stay consumed without a booking record. a real storage version should put
+  the seat decrement and booking insert in one transaction.
+
+- tests are good but some assertions are too loose. BookingServiceImplTest (line 60) just verifies
+  save(any()) - capture the Booking and assert flightNumber, passengerName, seats, UUID and
+  createdAt. also add API tests for duplicate flight 409, malformed JSON 400, and the create-flight
+  response body.
+
+- ProjectArchiver has a couple of edge-case path bugs. ProjectArchiver (line 43) can NPE for an
+  output like archive.zip because getParent() is null, and relative output paths may not compare
+  correctly (line 120). resolve output to absolute and test with temp dirs.
+
+- nit: README (line 104) has a stray closing code fence, and the jacoco path (line 74) is
+  misleading on OneDrive because build.gradle redirects reports to temp.
+
+verified: ran gradlew test, 16 tests passing. coverage after the new utility is 210/272 lines,
+15/28 branches.
+
+can u let me know ur view?
+
+[AI ACTION]
+Agreed with all six; implemented on branch fix/review-round-2: profile-less packaged config
+(bootRun sets dev locally), atomic FlightRepository.saveIfAbsent (putIfAbsent), compensating
+Flight.release() on save failure, ArgumentCaptor + new API tests (409/400/create-body),
+ProjectArchiver absolute-path fix + ProjectArchiverTest, README fence + JaCoCo note. Tests green.
+
+
+-----------------------------------------------------------------------
+ PROMPT #21  |   2026-07-08 ~13:22   |   Phase: Code review (round 3)
+-----------------------------------------------------------------------
+[USER PROMPT — VERBATIM]
+2nd review:
+
+- the rollback path is still untested. BookingServiceImpl (line 67) now restores seats if
+  bookingRepository.save() throws, but BookingServiceImplTest (line 47) never forces that failure
+  path. add a test that mocks save() to throw, then asserts the seats return to the original count
+  and the exception propagates.
+
+- release() silently clamps over-release. Flight.java (line 68) uses Math.min(totalSeats,
+  availableSeats + seats). that's safe against exceeding capacity but it can hide double-release
+  bugs. i'd either make it package-private/service-internal, or throw if seats > totalSeats -
+  availableSeats.
+
+- nit: README profile wording is slightly ambiguous. README (line 34) says dev (default), while
+  application.yml (line 7) correctly says the packaged jar/Docker runs profile-less and build.gradle
+  (line 74) makes only bootRun default to dev. i'd say "dev default for bootRun" to avoid confusion.
+
+[AI ACTION]
+Agreed with all three (on branch fix/review-round-2 / PR #6): added a BookingServiceImplTest that
+makes save() throw and asserts seats are restored and the exception propagates; made Flight.release()
+fail-fast (throws IllegalStateException if releasing more than is reserved) instead of clamping, with
+two new FlightTest cases; clarified README so `dev` is described as the bootRun default only. Tests green.
+
+
+-----------------------------------------------------------------------
+ PROMPT #22  |   2026-07-08 ~15:55   |   Phase: Coverage review vs spec
+-----------------------------------------------------------------------
+[USER PROMPT — VERBATIM]
+compared to question.txt, the application layer is covered well.
+
+covered: spring boot + java + gradle; single instance, in-memory; no auth/rate-limiting/search;
+client books by known flightNumber; no booking retrieval API; no overbooking (Flight.reserve() +
+BookingServiceImpl); REST endpoints/status codes; POST /api/v1/flights + POST /api/v1/bookings;
+201/400/404/409 handled; README deliverables; AI prompt audit + IMPROVEMENTS.md.
+
+tests: unit (FlightTest, BookingServiceImplTest, FlightServiceImplTest, ProjectArchiverTest) and
+integration (full flow, overbooking 409, unknown 404, validation 400, duplicate 409, malformed 400,
+create-flight body) all good. ran gradlew test: BUILD SUCCESSFUL.
+
+small gaps:
+- the postman collection doesn't fully match the integration coverage. it has register, book,
+  overbook, unknown flight, invalid body - but not duplicate flight, malformed json, or the
+  create-flight response body assertions.
+- one service edge test worth adding: if bookingRepository.save() throws, assert BookingServiceImpl
+  releases the reserved seats.
+
+so: application + unit + integration coverage is interview-ready; postman is acceptable but not
+complete compared to the INT suite.
+
+[AI ACTION]
+Extended the Postman collection to match the integration suite: create-flight body assertions +
+duplicate flight (409, FB-409-002) + malformed JSON (400, FB-400-002). Newman re-run: 7 requests /
+14 assertions, all passing. The rollback service test was already added in the prior commit
+(a0fa982, releasesSeatsWhenPersistenceFails) — the reviewer had seen a slightly earlier commit.
+
+
 =======================================================================
  END OF AUDIT  —  appended chronologically as new prompts arrive.
 =======================================================================

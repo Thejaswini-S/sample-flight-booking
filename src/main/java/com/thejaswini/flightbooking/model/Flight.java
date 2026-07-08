@@ -58,6 +58,26 @@ public class Flight {
         return true;
     }
 
+    /**
+     * Returns previously reserved seats to availability (a compensating action used if a booking
+     * fails to persist after a successful {@link #reserve(int)}).
+     *
+     * @param seats number of seats to release (must be positive and must not exceed the number
+     *              currently reserved)
+     * @throws IllegalArgumentException if {@code seats} is not positive
+     * @throws IllegalStateException    if asked to release more seats than are currently reserved,
+     *                                  which would indicate a double-release bug
+     */
+    public synchronized void release(int seats) {
+        if (seats <= 0) {
+            throw new IllegalArgumentException(ValidationMessages.RESERVE_SEATS_POSITIVE);
+        }
+        if (seats > totalSeats - availableSeats) {
+            throw new IllegalStateException(ValidationMessages.RELEASE_EXCEEDS_RESERVED);
+        }
+        availableSeats += seats;
+    }
+
     /** @return the unique flight number used to identify and book this flight */
     public String getFlightNumber() {
         return flightNumber;

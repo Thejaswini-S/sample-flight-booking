@@ -70,3 +70,9 @@ tasks.register('runArchiver', JavaExec) {
 tasks.named('jar') {
     enabled = false
 }
+
+// Local convenience only: `gradlew bootRun` activates the dev profile (seeded sample data).
+// The packaged jar / Docker image stays profile-less unless SPRING_PROFILES_ACTIVE is set.
+tasks.named('bootRun') {
+    systemProperty 'spring.profiles.active', 'dev'
+}

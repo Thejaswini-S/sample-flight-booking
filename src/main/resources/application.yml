@@ -4,9 +4,9 @@ server:
 spring:
   application:
     name: flight-booking-api
-  profiles:
-    # Default profile for local runs; override via SPRING_PROFILES_ACTIVE or --spring.profiles.active
-    active: dev
+  # No default profile is baked into the packaged artifact: the jar / Docker image runs profile-less
+  # (no seed data, INFO logging). Local `gradlew bootRun` activates `dev` (see build.gradle); set
+  # SPRING_PROFILES_ACTIVE=dev (or prod) to choose a profile in any other environment.
 
 # OpenAPI / Swagger UI (springdoc)
 springdoc:
